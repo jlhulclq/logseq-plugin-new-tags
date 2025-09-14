@@ -43,6 +43,12 @@ Option B: Manual / 手动安装
 
 MIT. Original work © [gidongkwon/logseq-plugin-tags](https://github.com/gidongkwon/logseq-plugin-tags). Enhancements © jlhulclq.
 
+## Acknowledgements / 致谢
+
+This project is derived from and inspired by
+[gidongkwon/logseq-plugin-tags](https://github.com/gidongkwon/logseq-plugin-tags)
+(MIT License). Thanks to the original author for the great work.
+
 ## Why?
 Logseq has no distinction between `#tag` and `[[page]]`. But I use them in different context. I use `#tag` in blocks and pages as metadata which containing category and further note-developing opportunity, unlike normal links in pages.
 
