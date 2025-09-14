@@ -1,6 +1,6 @@
 {
   "name": "logseq-plugin-new-tags",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "main": "dist/index.html",
   "author": "jlhulclq",
   "description": "New Tags for Logseq: searchable tags pane with drag-sort, persist state, and quick expand/collapse.",
