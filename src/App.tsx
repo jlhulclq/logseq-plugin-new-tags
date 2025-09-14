@@ -224,7 +224,18 @@ export function App({ themeMode: initialThemeMode, placement = 'overlay' }: Prop
                 }
               }}
             >
-              <img src={foldIcon} alt='toggle expand' style={{ width: 18, height: 18, transform: expandNext ? 'rotate(180deg)' : 'none', opacity: 0.85 }} />
+              <img
+                src={foldIcon}
+                alt='toggle expand'
+                style={{
+                  width: 18,
+                  height: 18,
+                  transform: expandNext ? 'rotate(180deg)' : 'none',
+                  opacity: 0.9,
+                  // 深色模式下将图标反相以变为白色，提升可见性
+                  filter: themeMode === 'dark' ? 'invert(1)' : 'none',
+                }}
+              />
             </button>
           </div>
           <TagList 

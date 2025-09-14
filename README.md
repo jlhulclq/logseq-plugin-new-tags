@@ -1,5 +1,7 @@
 # New Tags for Logseq / 新Tags 插件
 
+![demo](demo.gif)
+
 Based on / 基于: [gidongkwon/logseq-plugin-tags](https://github.com/gidongkwon/logseq-plugin-tags) 二次开发 / secondary development.
 
 ## Description / 插件简介
@@ -54,4 +56,4 @@ So, I have made one. If you are looking for Obsidian-like tag pane, this is the 
 Load prebuilt package from [Releases](https://github.com/gidongkwon/logseq-plugin-tags/releases) page.
 
 ## Demo
-![demo](demo.gif)
+同上方动图。
