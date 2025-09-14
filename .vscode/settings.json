@@ -2,8 +2,8 @@
   "editor.tabSize": 2,
   "editor.linkedEditing": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true,
-    "addMissingImports": true
+    "source.organizeImports": "explicit",
+    "addMissingImports": "explicit"
   },
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
