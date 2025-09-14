@@ -13,6 +13,17 @@ export const Input = styled('input', {
 
   backgroundColor: '$elevation0',
   border: '1px solid $colors$interactiveBorder',
+  color: '$slate12',
+  caretColor: '$slate12',
+
+  '::placeholder': {
+    color: '$slate9',
+  },
+
+  '.dark-theme &': {
+    color: '$slate12',
+    caretColor: '$slate12',
+  },
 
   variants: {
     size: {
