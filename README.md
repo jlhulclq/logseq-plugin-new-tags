@@ -18,7 +18,7 @@ ZH:
 - Drag to reorder tags and persist order / 拖拽排序并持久化顺序
 - Per-tag expand/collapse persisted / 每个标签展开/折叠状态持久化
 - One icon button to toggle Expand all / Collapse all / 单个图标按钮切换“全部展开/全部折叠”
-- Click tag name to open tag page / 点击标签名打开对应页面
+- NEW: Click tag name to open the tag page directly / 新功能：点击标签名可直接打开对应“标签页”（非普通页面跳转），一键进入标签聚合视图
 - Fixed-height pane aligned with editor; internal scroll / 面板高度与编辑区一致，内部滚动
 - Keyboard shortcut (user-defined) to open panel via Shortcuts page / 通过 Shortcuts 页面自定义快捷键打开面板（默认不绑定）
 
@@ -37,6 +37,7 @@ Option B: Manual / 手动安装
 - Search box filters tags / 搜索框用于筛选标签
 - Drag tag rows to reorder; order is saved / 拖拽标签行进行排序，顺序自动保存
 - Click the top-right fold icon to expand or collapse all / 右上角折叠图标按钮用于一键展开/折叠全部
+- Click a tag name to open its tag page directly / 点击标签名，直接打开该“标签页”，快速查看被该标签引用的页面与块
 
 ## License
 
