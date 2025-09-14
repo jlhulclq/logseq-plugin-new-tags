@@ -24,10 +24,13 @@ const UsageItem = styled('div', {
 });
 
 const PageLink = styled('span', {
-  color: 'hsl(152, 34%, 62%)', // 使用指定的HSL颜色
+  color: 'hsl(152, 34%, 62%)', // 亮色主题下的链接色
   cursor: 'pointer',
   '&:hover': {
     textDecoration: 'underline',
+  },
+  '.dark-theme &': {
+    color: '$slate11',
   },
 });
 
@@ -43,6 +46,11 @@ const PagePath = styled('span', {
   '&:hover': {
     filter: 'brightness(0.95)',
   },
+  '.dark-theme &': {
+    backgroundColor: '$slate6',
+    color: '$slate12',
+    letterSpacing: '0.5px',
+  },
 });
 
 const ContentText = styled('span', {
@@ -51,6 +59,9 @@ const ContentText = styled('span', {
   fontSize: '14px', // 基准字体大小
   cursor: 'pointer',
   userSelect: 'none', // 防止文字被选中
+  '.dark-theme &': {
+    color: '$slate12',
+  },
 });
 
 const Tag = styled('span', {
@@ -64,6 +75,10 @@ const Tag = styled('span', {
   userSelect: 'none',
   '&:hover': {
     filter: 'brightness(0.95)',
+  },
+  '.dark-theme &': {
+    backgroundColor: '$slate6',
+    color: '$slate12',
   },
 });
 
@@ -166,7 +181,7 @@ export function TagUsage({ usages }: Props) {
                 onClick={(e) => handleTextSearch(text, e)}
                 title="点击搜索文本"
               >
-                txt
+                TXT
               </PagePath>
             );
           }
@@ -211,7 +226,7 @@ export function TagUsage({ usages }: Props) {
               onClick={(e) => handleTextSearch(text, e)}
               title="点击搜索文本"
             >
-              txt
+              TXT
             </PagePath>
           );
         }

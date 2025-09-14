@@ -30,6 +30,10 @@ const TagButton = styled('button', {
   '[data-state=open] &': {
     backgroundColor: 'hsla(var(--tag-hue), 34%, 95%, 0.5)',
   },
+  // 暗黑模式下不再使用彩色背景，统一为提升色
+  '.dark-theme &[data-state=open]': {
+    backgroundColor: '$elevation1',
+  },
 });
 
 const IconWrapper = styled('div', {
@@ -43,6 +47,10 @@ const IconWrapper = styled('div', {
   transition: 'all 0.2s',
   '[data-state=open] &': {
     backgroundColor: 'hsla(var(--tag-hue), 34%, 35%, 1) !important',
+  },
+  // 暗黑模式：统一为中性的圆点色
+  '.dark-theme &[data-state=open]': {
+    backgroundColor: '$slate7 !important',
   },
 });
 
@@ -75,6 +83,15 @@ const TagNameText = styled('span', {
     backgroundColor: 'hsla(var(--tag-hue), 34%, 45%, 1) !important',
     filter: 'brightness(1.1)',
   },
+  // 暗黑模式：统一使用单一中性色，并提高对比度
+  '.dark-theme &': {
+    backgroundColor: '$slate7 !important',
+    color: '$slate12',
+  },
+  '.dark-theme &[data-state=open]': {
+    backgroundColor: '$slate7 !important',
+    filter: 'none',
+  },
 });
 
 const TagCount = styled('span', {
@@ -92,6 +109,12 @@ const TagCount = styled('span', {
     backgroundColor: 'hsla(var(--tag-hue), 34%, 50%, 0.1)',
     borderColor: 'hsla(var(--tag-hue), 34%, 50%, 0.3)',
     color: 'hsla(var(--tag-hue), 54%, 40%, 1)',
+  },
+  // 暗黑模式：统一为中性方案
+  '.dark-theme &[data-state=open]': {
+    backgroundColor: '$slate4',
+    borderColor: '$slate6',
+    color: '$slate11',
   },
 });
 
