@@ -120,7 +120,13 @@ type Props = {
 
 export function TagTreeEntry({ node, depth = 0 }: Props) {
   const hasChildren = node.children.size > 0;
-  const isLeaf = !hasChildren; // 叶子节点：没有子节点（无论是否有内容）
+  const hasContent = node.selfUsages.length > 0;
+  
+  // 叶子节点：没有子节点
+  if (!hasChildren) {
+    // 叶子节点：使用 TagEntry 渲染，显示末段名
+    return <TagEntry tag={{ name: node.fullPath, usages: node.selfUsages }} displayName={node.name} />;
+  }
   
   const [usageOpen, setUsageOpen] = useState<boolean>(() => {
     try {
@@ -153,10 +159,7 @@ export function TagTreeEntry({ node, depth = 0 }: Props) {
     await logseq.App.pushState('page', { name: node.fullPath });
   };
 
-  if (isLeaf) {
-    // 叶子：显示末段名
-    return <TagEntry tag={{ name: node.fullPath, usages: node.selfUsages }} displayName={node.name} />;
-  }
+  // 非叶子节点：有子节点，需要展开/折叠功能
 
   return (
     <StyledTag open={usageOpen} onOpenChange={handleOpenChange}>
