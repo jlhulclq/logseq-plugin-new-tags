@@ -1,6 +1,7 @@
 # New Tags for Logseq / 新Tags 插件
 
-![demo](demo.gif)
+![demo-1](1.gif)
+![demo-2](2.gif)
 
 Based on / 基于: [gidongkwon/logseq-plugin-tags](https://github.com/gidongkwon/logseq-plugin-tags) 二次开发 / secondary development.
 
