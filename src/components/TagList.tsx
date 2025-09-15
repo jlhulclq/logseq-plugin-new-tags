@@ -109,6 +109,41 @@ export function TagList({ filter, sortAscending, enableDragSort = true, refresh 
   // 构建层级树（根节点）
   const treeRoot = useMemo(() => buildTagTree(tags, '/'), [tags]);
 
+  // 获取排序后的根节点列表（支持拖拽排序）
+  const sortedRootNodes = useMemo(() => {
+    const rootNodeNames = Array.from(treeRoot.children.keys());
+    
+    // 确保所有根节点都在排序列表中
+    rootNodeNames.forEach(nodeName => {
+      if (!tagOrder.includes(nodeName)) {
+        addTagToOrder(nodeName);
+      }
+    });
+
+    let sorted: string[];
+    
+    if (enableDragSort && tagOrder.length > 0) {
+      // 使用自定义排序
+      const orderedNodes = tagOrder.filter(nodeName => rootNodeNames.includes(nodeName));
+      const unorderedNodes = rootNodeNames.filter(nodeName => !tagOrder.includes(nodeName));
+      sorted = [...orderedNodes, ...unorderedNodes];
+    } else {
+      // 使用数量排序
+      sorted = rootNodeNames.sort((a, b) => {
+        const nodeA = treeRoot.children.get(a)!;
+        const nodeB = treeRoot.children.get(b)!;
+        const diff = nodeB.totalCount - nodeA.totalCount;
+        return sortAscending ? -diff : diff;
+      });
+    }
+
+    // 应用过滤器
+    return sorted.filter(nodeName => {
+      if (filter.trim() === '') return true;
+      return nodeName.toLowerCase().includes(filter.toLowerCase());
+    }).map(nodeName => treeRoot.children.get(nodeName)!);
+  }, [treeRoot, tagOrder, sortAscending, filter, enableDragSort, addTagToOrder, refresh]);
+
   return (
     <StyldTagList onContextMenu={handleContextMenu} onClick={() => menu.visible && setMenu({ ...menu, visible: false })}>
       {menu.visible && (
@@ -117,9 +152,33 @@ export function TagList({ filter, sortAscending, enableDragSort = true, refresh 
           <MenuItem onClick={() => expandOrCollapseAll(false)}>Collapse all</MenuItem>
         </ContextMenu>
       )}
-      {Array.from(treeRoot.children.values()).map((node) => (
-        <TagTreeEntry key={`${node.fullPath}-${version}-${refresh}`} node={node} />
-      ))}
+      {sortedRootNodes.map((node, index) => {
+        if (enableDragSort) {
+          return (
+            <div
+              key={`${node.fullPath}-${version}-${refresh}`}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData('text/plain', node.name);
+                handleStart(node.name);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                handleOver(node.name);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                const active = e.dataTransfer.getData('text/plain') || node.name;
+                if (active) handleDrop(node.name);
+              }}
+            >
+              <TagTreeEntry node={node} />
+            </div>
+          );
+        } else {
+          return <TagTreeEntry key={`${node.fullPath}-${version}-${refresh}`} node={node} />;
+        }
+      })}
     </StyldTagList>
   );
 }
