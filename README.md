@@ -11,6 +11,9 @@
 ### Advanced Features / 高级功能
 ![Advanced Features](demo-advanced.gif)
 
+### Drag & Drop Sorting / 拖拽排序功能
+![Drag Sort Demo](demo-drag-sort.gif)
+
 ---
 
 ## 📖 Description / 插件简介
