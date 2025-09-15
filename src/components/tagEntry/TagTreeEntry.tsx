@@ -120,7 +120,7 @@ type Props = {
 
 export function TagTreeEntry({ node, depth = 0 }: Props) {
   const hasChildren = node.children.size > 0;
-  const isLeaf = node.selfUsages.length > 0 && !hasChildren;
+  const isLeaf = !hasChildren; // 叶子节点：没有子节点（无论是否有内容）
   
   const [usageOpen, setUsageOpen] = useState<boolean>(() => {
     try {
