@@ -49,19 +49,3 @@ MIT. Original work © [gidongkwon/logseq-plugin-tags](https://github.com/gidongk
 This project is derived from and inspired by
 [gidongkwon/logseq-plugin-tags](https://github.com/gidongkwon/logseq-plugin-tags)
 (MIT License). Thanks to the original author for the great work.
-
-## Why?
-Logseq has no distinction between `#tag` and `[[page]]`. But I use them in different context. I use `#tag` in blocks and pages as metadata which containing category and further note-developing opportunity, unlike normal links in pages.
-
-So, I have made one. If you are looking for Obsidian-like tag pane, this is the one for you!
-
-## How to use?
-### Option 1: Install from Marketplace
-1. Go to `⋯` > `Settings` > `Advanced` and enable Developer Mode.
-2. Go to `⋯` > `Plugin` > `Marketplace` and install Tags plugin.
-
-### Option 2: Manual install
-Load prebuilt package from [Releases](https://github.com/gidongkwon/logseq-plugin-tags/releases) page.
-
-## Demo
-同上方动图。
