@@ -169,7 +169,7 @@ export function TagEntry({ tag, displayName }: Props) {
       <Collapsible.Trigger asChild>
         <TagButton style={{ '--tag-hue': hue } as any}>
           <IconWrapper style={{ backgroundColor: colorTheme.regular }}>
-            <Chevron viewBox="0 0 16 16" aria-hidden="true">
+            <Chevron viewBox="0 0 16 16" aria-hidden="true" style={{ transform: usageOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}>
               <path d="M6 4l4 4-4 4" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </Chevron>
           </IconWrapper>
