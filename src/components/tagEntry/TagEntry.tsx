@@ -124,9 +124,11 @@ const ContentWrapper = styled(Collapsible.Content, {
 
 type Props = {
   tag: Tag;
+  // 可选：覆盖显示名称（不影响打开页面与着色）
+  displayName?: string;
 };
 
-export function TagEntry({ tag }: Props) {
+export function TagEntry({ tag, displayName }: Props) {
   const [usageOpen, setUsageOpen] = useState<boolean>(() => {
     try {
       const saved = localStorage.getItem('logseq-plugin-tags-expanded');
@@ -180,7 +182,7 @@ export function TagEntry({ tag }: Props) {
               }}
               title="在新页面中打开标签"
             >
-              {tag.name}
+              {displayName ?? tag.name}
             </TagNameText>
           </TagName>
           <TagCount>
