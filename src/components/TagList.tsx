@@ -6,6 +6,8 @@ import { styled } from '../stitches.config';
 import { TagContext } from './tagEntry/TagContext';
 import { TagEntry } from './tagEntry/TagEntry';
 import { SimpleDraggableTagEntry } from './tagEntry/SimpleDraggableTagEntry';
+import { buildTagTree } from '../utils';
+import { TagTreeEntry } from './tagEntry/TagTreeEntry';
 
 const StyldTagList = styled('div', {
   position: 'relative',
@@ -104,38 +106,8 @@ export function TagList({ filter, sortAscending, enableDragSort = true, refresh 
     expandOrCollapseAll(applyExpand.expand);
   }, [applyExpand]);
 
-  // 获取排序后的标签列表
-  const sortedTags = useMemo(() => {
-    const tagNames = Object.keys(tags);
-    
-    // 确保所有标签都在排序列表中
-    tagNames.forEach(tagName => {
-      if (!tagOrder.includes(tagName)) {
-        addTagToOrder(tagName);
-      }
-    });
-
-    let sorted: string[];
-    
-    if (enableDragSort && tagOrder.length > 0) {
-      // 使用自定义排序
-      const orderedTags = tagOrder.filter(tagName => tagNames.includes(tagName));
-      const unorderedTags = tagNames.filter(tagName => !tagOrder.includes(tagName));
-      sorted = [...orderedTags, ...unorderedTags];
-    } else {
-      // 使用数量排序
-      sorted = tagNames.sort((a, b) => {
-        const diff = tags[b].length - tags[a].length;
-        return sortAscending ? -diff : diff;
-      });
-    }
-
-    // 应用过滤器
-    return sorted.filter(tagName => {
-      if (filter.trim() === '') return true;
-      return tagName.toLowerCase().includes(filter.toLowerCase());
-    });
-  }, [tags, tagOrder, sortAscending, filter, enableDragSort, addTagToOrder, refresh]);
+  // 构建层级树（根节点）
+  const treeRoot = useMemo(() => buildTagTree(tags, '/'), [tags]);
 
   return (
     <StyldTagList onContextMenu={handleContextMenu} onClick={() => menu.visible && setMenu({ ...menu, visible: false })}>
@@ -145,19 +117,9 @@ export function TagList({ filter, sortAscending, enableDragSort = true, refresh 
           <MenuItem onClick={() => expandOrCollapseAll(false)}>Collapse all</MenuItem>
         </ContextMenu>
       )}
-      {sortedTags.map(tagName => {
-        const tag = { name: tagName, usages: tags[tagName] };
-        return (
-          <TagContext.Provider value={tag} key={`${tagName}-${version}-${refresh}`}>
-            <SimpleDraggableTagEntry
-              tag={tag}
-              onDragStart={handleStart}
-              onDragOver={handleOver}
-              onDrop={handleDrop}
-            />
-          </TagContext.Provider>
-        );
-      })}
+      {Array.from(treeRoot.children.values()).map((node) => (
+        <TagTreeEntry key={`${node.fullPath}-${version}-${refresh}`} node={node} />
+      ))}
     </StyldTagList>
   );
 }

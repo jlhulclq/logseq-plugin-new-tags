@@ -1,4 +1,5 @@
-import { QueryResultPageEntity } from 'logseqQueryResultTypes';
+import { QueryResultBlockEntity, QueryResultPageEntity } from 'logseqQueryResultTypes';
+import { TagTreeNode, TagUsageEntity } from './types';
 
 // https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
 export function escapeRegExp(s: string) {
@@ -36,3 +37,64 @@ export function getTagColorTheme(tagName: string) {
     dark: `hsl(${hue}, ${saturation}, 40%)`,     // 深色 - 用于文字和图标
   };
 };
+
+// ---------- 层级标签树构建 ----------
+
+export function buildTagTree(
+  tagsRecord: Record<string, Array<TagUsageEntity>>,
+  delimiter: string = '/',
+): TagTreeNode {
+  const root: TagTreeNode = {
+    name: '',
+    fullPath: '',
+    selfUsages: [],
+    children: new Map(),
+    totalCount: 0,
+  };
+
+  const normalize = (name: string) =>
+    name
+      .split(delimiter)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+  // 构建树，插入自计数
+  Object.entries(tagsRecord).forEach(([tagName, usages]) => {
+    const parts = normalize(tagName);
+    if (parts.length === 0) return;
+
+    let node = root;
+    let pathSoFar: string[] = [];
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      pathSoFar.push(part);
+      const fullPath = pathSoFar.join(delimiter);
+      if (!node.children.has(part)) {
+        node.children.set(part, {
+          name: part,
+          fullPath,
+          selfUsages: [],
+          children: new Map<string, TagTreeNode>(),
+          totalCount: 0,
+        });
+      }
+      node = node.children.get(part)!;
+      if (i === parts.length - 1) {
+        node.selfUsages = usages;
+      }
+    }
+  });
+
+  // 自底向上统计 totalCount
+  const dfs = (node: TagTreeNode): number => {
+    let sum = node.selfUsages.length;
+    node.children.forEach((child) => {
+      sum += dfs(child);
+    });
+    node.totalCount = sum;
+    return sum;
+  };
+  dfs(root);
+
+  return root;
+}
