@@ -1,9 +1,9 @@
 {
-  "name": "logseq-plugin-new-tags",
-  "version": "0.1.4",
+  "name": "logseq-plugin-enhanced-tags",
+  "version": "2.0.0",
   "main": "dist/index.html",
   "author": "jlhulclq",
-  "description": "New Tags for Logseq: searchable tags pane with drag-sort, persist state, and quick expand/collapse.",
+  "description": "Enhanced Tags Plugin for Logseq: Advanced tags management with dual themes, native settings integration, improved UI consistency, and refined user experience.",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -33,8 +33,8 @@
     "vite-tsconfig-paths": "^3.3.17"
   },
   "logseq": {
-    "id": "logseq-plugin-new-tags",
-    "title": "New Tags",
+    "id": "logseq-plugin-enhanced-tags",
+    "title": "Enhanced Tags",
     "icon": "logo.svg",
     "keybindings": [
       {

@@ -1,6 +1,7 @@
 import { QueryResultBlockEntity, QueryResultPageEntity } from 'logseqQueryResultTypes';
 import React from 'react';
 import { styled } from 'stitches.config';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const UsageList = styled('div', {
   display: 'flex',
@@ -21,11 +22,19 @@ const UsageItem = styled('div', {
   '&:hover': {
     backgroundColor: '$elevation2',
   },
+  // 修复深色模式下的错误背景色
+  '.dark-theme &': {
+    backgroundColor: 'transparent',
+  },
+  '.dark-theme &:hover': {
+    backgroundColor: '$elevation2',
+  },
 });
 
 const PageLink = styled('span', {
   color: 'hsl(152, 34%, 62%)', // 亮色主题下的链接色
   cursor: 'pointer',
+  fontSize: '14px', // 与标签名称保持一致
   '&:hover': {
     textDecoration: 'underline',
   },
@@ -47,9 +56,18 @@ const PagePath = styled('span', {
     filter: 'brightness(0.95)',
   },
   '.dark-theme &': {
-    backgroundColor: '$slate6',
-    color: '$slate12',
+    backgroundColor: 'transparent',
+    color: '$slate11',
+    border: '1px solid $slate7',
     letterSpacing: '0.5px',
+  },
+  
+  variants: {
+    theme: {
+      simple: {
+        display: 'none', // 简单主题下完全隐藏TXT标识
+      },
+    },
   },
 });
 
@@ -61,6 +79,17 @@ const ContentText = styled('span', {
   userSelect: 'none', // 防止文字被选中
   '.dark-theme &': {
     color: '$slate12',
+  },
+  
+  variants: {
+    theme: {
+      simple: {
+        color: '$slate12',
+        '.dark-theme &': {
+          color: '$slate11',
+        },
+      },
+    },
   },
 });
 
@@ -77,8 +106,24 @@ const Tag = styled('span', {
     filter: 'brightness(0.95)',
   },
   '.dark-theme &': {
-    backgroundColor: '$slate6',
-    color: '$slate12',
+    backgroundColor: 'transparent',
+    color: '$slate11',
+    border: '1px solid $slate7',
+  },
+  
+  variants: {
+    theme: {
+      simple: {
+        backgroundColor: 'transparent',
+        color: '$slate12',
+        border: '1px solid $slate7',
+        '.dark-theme &': {
+          backgroundColor: 'transparent',
+          color: '$slate11',
+          border: '1px solid $slate7',
+        },
+      },
+    },
   },
 });
 
@@ -87,6 +132,7 @@ type Props = {
 };
 
 export function TagUsage({ usages }: Props) {
+  const { isSimpleTheme } = useTheme();
   const handlePageClick = async (pageName: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -173,8 +219,8 @@ export function TagUsage({ usages }: Props) {
       if (match.index > lastIndex) {
         const text = content.slice(lastIndex, match.index).trim();
         if (text) {
-          if (!hasPageLink) {
-            // 只在纯文本前添加txt标识
+          if (!hasPageLink && !isSimpleTheme) {
+            // 只在纯文本前添加txt标识（简单主题下不显示）
             elements.push(
               <PagePath 
                 key="page-path" 
@@ -189,6 +235,7 @@ export function TagUsage({ usages }: Props) {
             <ContentText 
               key={`text-${lastIndex}`}
               onClick={(e) => handleTextSearch(text, e)}
+              theme={isSimpleTheme ? 'simple' : undefined}
             >
               {truncateText(text)}
             </ContentText>
@@ -219,13 +266,14 @@ export function TagUsage({ usages }: Props) {
     if (lastIndex < content.length) {
       const text = content.slice(lastIndex).trim();
       if (text) {
-        if (!hasPageLink) {
-          // 只在纯文本前添加txt标识
+        if (!hasPageLink && !isSimpleTheme) {
+          // 只在纯文本前添加txt标识（简单主题下不显示）
           elements.push(
             <PagePath 
               key="page-path" 
               onClick={(e) => handleTextSearch(text, e)}
               title="点击搜索文本"
+              theme={isSimpleTheme ? 'simple' : undefined}
             >
               TXT
             </PagePath>
@@ -235,6 +283,7 @@ export function TagUsage({ usages }: Props) {
           <ContentText 
             key={`text-${lastIndex}`}
             onClick={(e) => handleTextSearch(text, e)}
+            theme={isSimpleTheme ? 'simple' : undefined}
           >
             {truncateText(text)}
           </ContentText>

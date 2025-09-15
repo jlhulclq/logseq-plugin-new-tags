@@ -6,6 +6,7 @@ import foldIcon from '../fold-svgrepo-com.svg';
 import { TagList } from './components/TagList';
 import { useAppVisible } from './hooks/useAppVisible';
 import { usePluginSettings } from './hooks/usePluginSettings';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { css, darkTheme } from './stitches.config';
 
 const body = css({
@@ -209,15 +210,14 @@ export function App({ themeMode: initialThemeMode, placement = 'overlay' }: Prop
               title={expandNext ? 'Expand all' : 'Collapse all'}
               onClick={() => {
                 try {
-                  const saved = localStorage.getItem('logseq-plugin-tags-expanded');
-                  const map = saved ? JSON.parse(saved) : {};
-                  const values = Object.values(map) as boolean[];
-                  const allExpanded = values.length > 0 && values.every(v => v === true);
-                  const next = !allExpanded;
-                  // 设置将要应用的动作
-                  setApply(prev => ({ version: prev.version + 1, expand: next }));
-                  // 下一次点击取反
-                  setExpandNext(!next);
+                  // 直接使用当前状态决定操作
+                  const willExpand = expandNext;
+                  
+                  // 应用操作
+                  setApply(prev => ({ version: prev.version + 1, expand: willExpand }));
+                  
+                  // 切换状态为相反操作
+                  setExpandNext(!willExpand);
                 } catch {
                   setApply(prev => ({ version: prev.version + 1, expand: true }));
                   setExpandNext(false);
@@ -238,13 +238,15 @@ export function App({ themeMode: initialThemeMode, placement = 'overlay' }: Prop
               />
             </button>
           </div>
-          <TagList 
-            filter={filter} 
-            sortAscending={settings.sortAscending}
-            enableDragSort={true}
-            refresh={apply.version}
-            applyExpand={apply}
-          />
+          <ThemeProvider settings={{ theme: logseq.settings?.theme || 'colorful', shortcut: logseq.settings?.shortcut || 'mod+shift+t' }}>
+            <TagList 
+              filter={filter} 
+              sortAscending={settings.sortAscending}
+              enableDragSort={true}
+              refresh={apply.version}
+              applyExpand={apply}
+            />
+          </ThemeProvider>
         </div>
       </main>
     );

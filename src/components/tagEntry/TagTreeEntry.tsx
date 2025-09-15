@@ -4,6 +4,7 @@ import { styled } from '../../stitches.config';
 import { TagTreeNode } from '../../types';
 import { TagEntry } from './TagEntry';
 import { getTagColorTheme } from '../../utils';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const StyledTag = styled(Collapsible.Root, {
   display: 'flex',
@@ -27,11 +28,28 @@ const TagButton = styled('button', {
   '&:hover': {
     backgroundColor: '$elevation1',
   },
-  '[data-state=open] &': {
-    backgroundColor: 'hsla(var(--tag-hue), 34%, 95%, 0.5)',
-  },
-  '.dark-theme &[data-state=open]': {
-    backgroundColor: '$elevation1',
+  
+  variants: {
+    expanded: {
+      true: {
+        // 彩色主题下的展开背景
+        backgroundColor: 'hsla(var(--tag-hue), 34%, 95%, 0.5)',
+        '.dark-theme &': {
+          backgroundColor: '$slate4',
+        },
+      },
+    },
+    theme: {
+      simple: {
+        // 简单主题下的展开背景
+        '&[data-expanded=true]': {
+          backgroundColor: '$slate3',
+        },
+        '.dark-theme &[data-expanded=true]': {
+          backgroundColor: '$slate6',
+        },
+      },
+    },
   },
 });
 
@@ -50,12 +68,42 @@ const IconWrapper = styled('div', {
   '.dark-theme &[data-state=open]': {
     backgroundColor: '$slate7 !important',
   },
+  
+  variants: {
+    theme: {
+      simple: {
+        backgroundColor: 'transparent !important',
+        '[data-state=open] &': {
+          backgroundColor: 'transparent !important',
+        },
+        '.dark-theme &': {
+          backgroundColor: 'transparent !important',
+        },
+        '.dark-theme &[data-state=open]': {
+          backgroundColor: 'transparent !important',
+        },
+      },
+    },
+  },
 });
 
 const Chevron = styled('svg', {
   width: '12px',
   height: '12px',
   transition: 'transform 250ms, color 0.2s',
+  
+  variants: {
+    theme: {
+      simple: {
+        '& path': {
+          stroke: '$slate12 !important',
+        },
+        '.dark-theme & path': {
+          stroke: '$slate11 !important',
+        },
+      },
+    },
+  },
 });
 
 const TagName = styled('span', {
@@ -85,6 +133,38 @@ const TagNameText = styled('span', {
     backgroundColor: '$slate7 !important',
     filter: 'none',
   },
+  
+  variants: {
+    theme: {
+      simple: {
+        backgroundColor: 'transparent !important',
+        color: '$slate12',
+        border: 'none !important',
+        borderRadius: '0 !important',
+        padding: '0 !important',
+        '&:hover': {
+          textDecoration: 'underline',
+        },
+        '[data-state=open] &': {
+          backgroundColor: 'transparent !important',
+          border: 'none !important',
+          filter: 'none',
+          fontWeight: '600',
+        },
+        '.dark-theme &': {
+          backgroundColor: 'transparent !important',
+          color: '$slate11',
+          border: 'none !important',
+        },
+        '.dark-theme &[data-state=open]': {
+          backgroundColor: 'transparent !important',
+          border: 'none !important',
+          color: '$slate12',
+          fontWeight: '600',
+        },
+      },
+    },
+  },
 });
 
 const TagCount = styled('span', {
@@ -107,6 +187,33 @@ const TagCount = styled('span', {
     borderColor: '$slate6',
     color: '$slate11',
   },
+  
+  variants: {
+    theme: {
+      simple: {
+        backgroundColor: 'transparent !important',
+        border: 'none !important',
+        color: '$slate11',
+        padding: '0 !important',
+        borderRadius: '0 !important',
+        '[data-state=open] &': {
+          backgroundColor: 'transparent !important',
+          border: 'none !important',
+          color: '$slate11',
+        },
+        '.dark-theme &': {
+          backgroundColor: 'transparent !important',
+          border: 'none !important',
+          color: '$slate10',
+        },
+        '.dark-theme &[data-state=open]': {
+          backgroundColor: 'transparent !important',
+          border: 'none !important',
+          color: '$slate10',
+        },
+      },
+    },
+  },
 });
 
 const ContentWrapper = styled(Collapsible.Content, {
@@ -119,13 +226,19 @@ type Props = {
 };
 
 export function TagTreeEntry({ node, depth = 0 }: Props) {
+  const { isSimpleTheme } = useTheme();
   const hasChildren = node.children.size > 0;
   const hasContent = node.selfUsages.length > 0;
   
   // 叶子节点：没有子节点
   if (!hasChildren) {
-    // 叶子节点：使用 TagEntry 渲染，显示末段名
-    return <TagEntry tag={{ name: node.fullPath, usages: node.selfUsages }} displayName={node.name} />;
+    // 叶子节点：使用 TagEntry 渲染，显示末段名，禁用展开背景
+    return (
+      <TagEntry 
+        tag={{ name: node.fullPath, usages: node.selfUsages }} 
+        displayName={node.name}
+      />
+    );
   }
   
   const [usageOpen, setUsageOpen] = useState<boolean>(() => {
@@ -164,28 +277,50 @@ export function TagTreeEntry({ node, depth = 0 }: Props) {
   return (
     <StyledTag open={usageOpen} onOpenChange={handleOpenChange}>
       <Collapsible.Trigger asChild>
-        <TagButton style={{ '--tag-hue': hue } as any}>
-          <IconWrapper style={{ backgroundColor: colorTheme.regular }}>
+        <TagButton 
+          style={{ '--tag-hue': hue } as any}
+          theme={isSimpleTheme ? 'simple' : undefined}
+          expanded={usageOpen}
+          data-expanded={usageOpen}
+        >
+          <IconWrapper 
+            style={{ backgroundColor: isSimpleTheme ? 'transparent' : colorTheme.regular }}
+            theme={isSimpleTheme ? 'simple' : undefined}
+          >
             <Chevron 
               viewBox="0 0 16 16" 
               aria-hidden="true"
               style={{ 
                 transform: usageOpen ? 'rotate(90deg)' : 'rotate(0deg)'
               }}
+              theme={isSimpleTheme ? 'simple' : undefined}
             >
-              <path d="M6 4l4 4-4 4" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path 
+                d="M6 4l4 4-4 4" 
+                fill="none" 
+                stroke={isSimpleTheme ? 'currentColor' : '#FFFFFF'} 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+              />
             </Chevron>
           </IconWrapper>
           <TagName>
             <TagNameText
-              style={{ backgroundColor: colorTheme.regular }}
+              style={{ 
+                backgroundColor: isSimpleTheme ? 'transparent !important' : colorTheme.regular,
+                border: isSimpleTheme ? 'none !important' : undefined,
+                borderRadius: isSimpleTheme ? '0 !important' : undefined,
+                padding: isSimpleTheme ? '0 !important' : undefined
+              }}
+              theme={isSimpleTheme ? 'simple' : undefined}
               onClick={handleOpenPage}
               title="在新页面中打开标签"
             >
               {node.name || 'Root'}
             </TagNameText>
           </TagName>
-          <TagCount>
+          <TagCount theme={isSimpleTheme ? 'simple' : undefined}>
             {node.totalCount}
           </TagCount>
         </TagButton>
